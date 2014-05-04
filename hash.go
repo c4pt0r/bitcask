@@ -10,6 +10,16 @@ type HashTable struct {
 	db *DbFile
 }
 
+func NewHashTable(filename string) *HashTable {
+    ret := new(HashTable)
+    db, err := OpenDb(filename)
+    if err != nil {
+        return nil
+    }
+    ret.Load(db)
+    return ret
+}
+
 func (self *HashTable) Load(db *DbFile) {
 	self.l.Lock()
 	defer self.l.Unlock()
@@ -23,6 +33,7 @@ func (self *HashTable) Load(db *DbFile) {
 		db.Next()
 	}
 	self.m = m
+    self.db = db
 }
 
 func (self *HashTable) Get(key string) map[string][]byte {

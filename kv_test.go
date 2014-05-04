@@ -3,8 +3,9 @@ package bitcask
 import (
 	"log"
 	"testing"
+    "fmt"
 )
-
+/*
 func TestDbFile(t *testing.T) {
 	dbFile, err := OpenDb("/tmp/tmpdb")
 	if err != nil {
@@ -46,4 +47,30 @@ func TestBMap(t *testing.T) {
 	b := MapToBytes(m)
 	mm := BytesToMap(b)
 	log.Println(mm)
+}
+
+func TestHash(t *testing.T) {
+    h := NewHashTable("/tmp/tmpdb")
+    m := make(map[string][]byte)
+    m["field1"] = []byte("value1")
+    m["field2"] = []byte("value1")
+    h.Set("my key", m)
+
+    m1 := h.Get("my key")
+    if m1 != nil {
+        log.Println("success", string(m1["field1"]))
+    }
+}
+*/
+func TestHash(t *testing.T) {
+    h := NewHashTable("/tmp/tmpdb")
+    m := make(map[string][]byte)
+    m["field1"] = []byte("value1")
+    m["field2"] = []byte("value1")
+    for i := 0; i < 100; i++ {
+        k := fmt.Sprintf("key_%d", i)
+        h.Set(k, m)
+    }
+    log.Println(len(h.m))
+    h.db.Compact()
 }
